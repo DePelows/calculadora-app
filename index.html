@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Calculadora Académica UPCH</title>
+  
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#f3efe6" />
+  
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Barra Superior --> 
+    <header class="navbar">
+      <div class="brand">
+        <h1>Gestor Académico</h1>
+        <nav id="breadcrumbs" class="breadcrumbs"></nav>
+      </div>
+      <div class="navbar-stats">
+        <div class="stats-text">
+          <span>Créditos: <strong id="stat-total-creditos">0</strong></span>
+          <span>Acumulado: <strong id="stat-ponderado-acumulado" class="highlight">0.00</strong></span>
+        </div>
+        <div class="navbar-controls">
+          <button id="btn-theme" class="btn-theme" title="Alternar Modo Oscuro/Claro">🌓</button>
+          <button id="btn-open-donate" class="btn btn-donate" title="Apoyar el proyecto">❤️ Donar</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- VISTA 1: CICLOS -->
+    <section id="view-ciclos" class="view-panel active">
+      <div class="view-header-title">Ciclos</div>
+      <div class="panel-box">
+        <div class="panel-box-header">
+          <h2>Escoge un ciclo</h2>
+          <button id="btn-nuevo-ciclo" class="btn btn-primary">+ Nuevo Ciclo</button>
+        </div>
+        <div id="grid-ciclos" class="grid-ciclos"></div>
+      </div>
+    </section>
+
+    <!-- VISTA 2: CURSOS -->
+    <section id="view-cursos" class="view-panel">
+      <div class="view-top-nav">
+        <button id="btn-volver-ciclos" class="btn btn-secondary">← Volver a Ciclos</button>
+        <span class="view-header-title">Cursos</span>
+      </div>
+      <div class="panel-box">
+        <div class="panel-box-header">
+          <div>
+            <input type="text" id="input-ciclo-nombre-header" class="input-ciclo-header" placeholder="Nombre del ciclo" />
+            <p class="text-muted">Escoge un curso</p>
+          </div>
+          <div class="panel-actions">
+            <span class="badge-promedio">Ponderado Ciclo: <strong id="stat-ciclo-ponderado">0.00</strong></span>
+            <button id="btn-nuevo-curso" class="btn btn-primary">+ Nuevo Curso</button>
+          </div>
+        </div>
+        <div id="lista-cursos" class="lista-cursos"></div>
+      </div>
+    </section>
+
+    <!-- VISTA 3: PONDERADOS -->
+    <section id="view-ponderados" class="view-panel">
+      <div class="view-top-nav">
+        <button id="btn-volver-cursos" class="btn btn-secondary">← Volver a Cursos</button>
+        <span class="view-header-title">Calcula tu Ponderado</span>
+      </div>
+      <div class="panel-box">
+        <div class="panel-box-header">
+          <div>
+            <h2 id="curso-activo-titulo">Nombre del Curso</h2>
+            <div class="curso-inputs-meta">
+              <label>Nombre: <input type="text" id="input-curso-nombre" class="input-inline" /></label>
+              <label>Créditos: <input type="number" id="input-curso-creditos" min="1" max="20" class="input-inline input-num" /></label>
+            </div>
+          </div>
+          <div class="curso-nota-final">
+            <span>Nota Final del Curso</span>
+            <strong id="stat-curso-nota" class="highlight">0.00</strong>
+          </div>
+        </div>
+
+        <div class="evaluaciones-container">
+          <table class="tabla-evaluaciones">
+            <thead>
+              <tr>
+                <th>Evaluación</th>
+                <th style="width: 25%;">Peso (%)</th>
+                <th style="width: 25%;">Nota</th>
+                <th style="width: 15%;"></th>
+              </tr>
+            </thead>
+            <tbody id="tbody-evaluaciones"></tbody>
+          </table>
+          <div class="evaluaciones-footer">
+            <button id="btn-nueva-ev" class="btn btn-secondary">+ Agregar Evaluación</button>
+            <span id="peso-total-alerta" class="peso-alerta">Peso total: 0%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- MODAL DE DONACIONES -->
+  <div id="modal-donate" class="modal-overlay">
+    <div class="modal-content">
+      <button id="btn-close-donate" class="modal-close">&times;</button>
+      <h2>¡Apoya el proyecto manito!</h2>
+      <p class="text-muted" style="margin: 0.5rem 0 1.5rem 0; text-align: center;">
+        ¿Te sirvió la app para salvar el ciclo? Si es asi doname manit@ tengo hambre pe :(((
+      </p>
+      
+      <div class="qr-container">
+        <!-- Reemplaza el src con la ruta real de tu QR cuando lo tengas -->
+        <img src="assets/qr-donacion.png" alt="Código QR para Yape o Plin" class="qr-image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+PHJlY3Qgd2lkdGg9IjE1MCIgaGVpZ2h0PSIxNTAiIGZpbGw9IiNlZWVlZWUiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGR5PSIuM2VtIj5BUVXDjyBUVSBRUjwvdGV4dD48L3N2Zz4='"/>
+      </div>
+      
+      <p class="donate-info">
+        <strong>Yape / Plin:</strong> 934-120-197<br>
+        Muchas gracias
+      </p>
+      <button id="btn-close-donate-bottom" class="btn btn-secondary" style="width: 100%; margin-top: 1rem;">Cerrar</button>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
