@@ -1,5 +1,5 @@
 {
-  "name": "Calculadora de Notas UPCH",
+  "name": "Ponderate",
   "short_name": "Ponderados",
   "description": "Calcula tus notas y ponderado universitario offline",
   "start_url": "./index.html",
