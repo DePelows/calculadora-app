@@ -1,4 +1,4 @@
-const CACHE_NAME = "upch-notas-v2";
+const CACHE_NAME = "upch-notas-v3";
 
 // Rutas actualizadas con la estructura de carpetas
 const ASSETS_TO_CACHE = [
